@@ -1,0 +1,208 @@
+MPLINK 4.49, Linker
+Linker Map File - Created Tue Jul 09 13:10:12 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x0009a2
+   .config_2007_PROJECT.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x0004d4      
+                            0x002007    0x002007      
+            1237 out of 8454 program addresses used, program memory utilization is 14%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                        ?   0x0003ec    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                 DIV_LOOP   0x00045c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                DelayLoop   0x000481    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               Delay_10us   0x00047f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                Delay_2us   0x00047c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                 END_SORT   0x00030c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               INNER_LOOP   0x0002af    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                      ISR   0x000005    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          MeasureDistance   0x000446    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              MultIn2by_j   0x00031a    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     NEXT   0x0002df    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               NEXT_OUTER   0x00030a    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  NO_SWAP   0x000308    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               OUTER_LOOP   0x0002a9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     Swap   0x0002e4    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     TENS   0x0003f7    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+         TRIGGER_PIN_HIGH   0x00043a    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          TRIGGER_PIN_LOW   0x000434    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+            TriggerSensor   0x000440    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                WAIT_ECHO   0x000446    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+            WAIT_ECHO_LOW   0x00044b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  andNext   0x000312    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+     chickHighLargerThan1   0x00046f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+ chickHunsHighLargerThan1   0x000402    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+       chickLargerThan100   0x0003d5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          chickLessThan58   0x000468    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              chickTheEqH   0x00030d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              chickTheEqL   0x000315    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                chickZero   0x000479    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+chickquotientHLargerThan1   0x0003dc    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+             clearDisplay   0x000484    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                   condec   0x0003e9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  condec2   0x0003e6    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              delay1000ms   0x00048d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               delay500ms   0x000488    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          displayFirst4US   0x000242    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                   finish   0x000466    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              finishhunds   0x0003f5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     inid   0x000030    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                     init   0x00004b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     loop   0x00011f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                    loop1   0x000012    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                    loopX   0x000017    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+         meatureDistanses   0x000120    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      moveCursorSecondRow   0x0004cf    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  mulLoop   0x000321    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                nextChick   0x0002e0    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                    onems   0x000010    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                   pulseE   0x00001b    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                   putLCD   0x00041f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  putLCD2   0x000414    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  putLCD3   0x00040c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn1InRow1   0x000335    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn1InRow2   0x000365    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn1InRow3   0x000395    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn2InRow1   0x00033b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn2InRow2   0x00036b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn2InRow3   0x00039d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn3InRow1   0x000341    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn3InRow2   0x000371    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn3InRow3   0x0003a5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn4InRow1   0x000347    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn4InRow2   0x000377    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn4InRow3   0x0003ad    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn5InRow1   0x00034d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn5InRow2   0x00037d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn5InRow3   0x0003b5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn6InRow1   0x000353    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn6InRow2   0x000383    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn6InRow3   0x0003bd    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn7InRow1   0x000359    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn7InRow2   0x000389    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn7InRow3   0x0003c5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn8InRow1   0x00035f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn8InRow2   0x00038f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn8InRow3   0x0003cd    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               selectROW1   0x000326    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               selectROW2   0x00032b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               selectROW3   0x000330    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     send   0x000020    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+        setCursorPosition   0x0004c9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+            sortDistanses   0x0002a6    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                    start   0x00006f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     sub1   0x0003ee    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     sub2   0x0003f9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+           welcomeMessage   0x000490    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                      xms   0x000016    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      ISR   0x000005    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                    onems   0x000010    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                    loop1   0x000012    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                      xms   0x000016    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                    loopX   0x000017    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                   pulseE   0x00001b    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                     send   0x000020    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                     inid   0x000030    program     static C:\Users\hp\Desktop\Project4\MPLAB\LCDIS_PORTD.INC
+                     init   0x00004b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                    start   0x00006f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     loop   0x00011f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+         meatureDistanses   0x000120    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          displayFirst4US   0x000242    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+            sortDistanses   0x0002a6    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               OUTER_LOOP   0x0002a9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               INNER_LOOP   0x0002af    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     NEXT   0x0002df    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                nextChick   0x0002e0    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     Swap   0x0002e4    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  NO_SWAP   0x000308    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               NEXT_OUTER   0x00030a    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                 END_SORT   0x00030c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              chickTheEqH   0x00030d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  andNext   0x000312    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              chickTheEqL   0x000315    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              MultIn2by_j   0x00031a    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  mulLoop   0x000321    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               selectROW1   0x000326    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               selectROW2   0x00032b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               selectROW3   0x000330    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn1InRow1   0x000335    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn2InRow1   0x00033b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn3InRow1   0x000341    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn4InRow1   0x000347    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn5InRow1   0x00034d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn6InRow1   0x000353    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn7InRow1   0x000359    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn8InRow1   0x00035f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn1InRow2   0x000365    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn2InRow2   0x00036b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn3InRow2   0x000371    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn4InRow2   0x000377    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn5InRow2   0x00037d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn6InRow2   0x000383    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn7InRow2   0x000389    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn8InRow2   0x00038f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn1InRow3   0x000395    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn2InRow3   0x00039d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn3InRow3   0x0003a5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn4InRow3   0x0003ad    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn5InRow3   0x0003b5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn6InRow3   0x0003bd    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn7InRow3   0x0003c5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      selectColumn8InRow3   0x0003cd    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+       chickLargerThan100   0x0003d5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+chickquotientHLargerThan1   0x0003dc    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  condec2   0x0003e6    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                   condec   0x0003e9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                        ?   0x0003ec    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     sub1   0x0003ee    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              finishhunds   0x0003f5    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     TENS   0x0003f7    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                     sub2   0x0003f9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+ chickHunsHighLargerThan1   0x000402    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  putLCD3   0x00040c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                  putLCD2   0x000414    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                   putLCD   0x00041f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          TRIGGER_PIN_LOW   0x000434    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+         TRIGGER_PIN_HIGH   0x00043a    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+            TriggerSensor   0x000440    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          MeasureDistance   0x000446    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                WAIT_ECHO   0x000446    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+            WAIT_ECHO_LOW   0x00044b    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                 DIV_LOOP   0x00045c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                   finish   0x000466    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+          chickLessThan58   0x000468    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+     chickHighLargerThan1   0x00046f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                chickZero   0x000479    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                Delay_2us   0x00047c    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               Delay_10us   0x00047f    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+                DelayLoop   0x000481    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+             clearDisplay   0x000484    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+               delay500ms   0x000488    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+              delay1000ms   0x00048d    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+           welcomeMessage   0x000490    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+        setCursorPosition   0x0004c9    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+      moveCursorSecondRow   0x0004cf    program     static C:\Users\hp\Desktop\Project4\MPLAB\project.asm
+
+

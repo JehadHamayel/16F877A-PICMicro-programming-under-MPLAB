@@ -1,0 +1,24 @@
+Warning[205] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1 : Found directive in column 1. (PROCESSOR)
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\LCDIS_PORTD.INC 27 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\LCDIS_PORTD.INC 37 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\LCDIS_PORTD.INC 62 : Using default destination of 1 (file).
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 138 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 141 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 153 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 154 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 155 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 156 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 157 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 159 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 160 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 161 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1266 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1294 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1306 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1307 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1311 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1312 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1324 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1481 : Using default destination of 1 (file).
+Message[305] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1490 : Using default destination of 1 (file).
+Warning[205] C:\USERS\HP\DESKTOP\PROJECT4\MPLAB\PROJECT.ASM 1607 : Found directive in column 1. (END)

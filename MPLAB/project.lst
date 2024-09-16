@@ -1,0 +1,2552 @@
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (PROCESSOR)
+                      00001 PROCESSOR 16F877A
+                      00002                 INCLUDE "P16F877A.INC"  
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2011 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00564         LIST
+                      00003                 
+2007   3731           00004                 __CONFIG 0x3731
+                      00005                  
+                      00006                  CBLOCK  0x20
+  00000020            00007                         pulseWidthH       ; Variable to store the high byte of pulse width
+  00000021            00008                         pulseWidthL       ; Variable to store the low byte of pulse width
+  00000022            00009                         quotient         ; Quotient of division
+  00000023            00010                         quotientH
+  00000024            00011                         tempH            ; Temporary high byte
+  00000025            00012                         tempL            ; Temporary low byte
+  00000026            00013                         num58
+  00000027            00014                         CurPosotion 
+  00000028            00015                         Count
+  00000029            00016                         huns
+  0000002A            00017                         tens
+  0000002B            00018                         ones
+  0000002C            00019                         resOfMul
+                      00020                         
+                      00021                 ENDC
+                      00022                 
+                      00023                 CBLOCK 0x30
+  00000030            00024                      us1_L
+  00000031            00025                         us1_H
+  00000032            00026                         us2_L
+  00000033            00027                         us2_H
+  00000034            00028                         us3_L
+  00000035            00029                         us3_H
+  00000036            00030                         us4_L
+  00000037            00031                         us4_H
+  00000038            00032                         us5_L
+  00000039            00033                         us5_H
+  0000003A            00034                         us6_L
+  0000003B            00035                         us6_H
+  0000003C            00036                         us7_L
+  0000003D            00037                         us7_H
+  0000003E            00038                         us8_L
+  0000003F            00039                         us8_H
+  00000040            00040                         us9_L
+  00000041            00041                         us9_H
+  00000042            00042                         us10_L
+  00000043            00043                         us10_H
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000044            00044                         us11_L
+  00000045            00045                         us11_H
+  00000046            00046                         us12_L
+  00000047            00047                         us12_H
+  00000048            00048                         us13_L
+  00000049            00049                         us13_H
+  0000004A            00050                         us14_L
+  0000004B            00051                         us14_H
+  0000004C            00052                         us15_L
+  0000004D            00053                         us15_H
+  0000004E            00054                         us16_L
+  0000004F            00055                         us16_H
+  00000050            00056                         us17_L
+  00000051            00057                         us17_H
+  00000052            00058                         us18_L
+  00000053            00059                         us18_H
+  00000054            00060                         us19_L
+  00000055            00061                         us19_H
+  00000056            00062                         us20_L
+  00000057            00063                         us20_H
+  00000058            00064                         us21_L
+  00000059            00065                         us21_H
+  0000005A            00066                         us22_L
+  0000005B            00067                         us22_H
+  0000005C            00068                         us23_L
+  0000005D            00069                         us23_H
+  0000005E            00070                         us24_L
+  0000005F            00071                         us24_H
+  00000060            00072                         us1_NUM
+  00000061            00073                         us2_NUM
+  00000062            00074                         us3_NUM
+  00000063            00075                         us4_NUM
+  00000064            00076                         us5_NUM
+  00000065            00077                         us6_NUM
+  00000066            00078                         us7_NUM
+  00000067            00079                         us8_NUM
+  00000068            00080                         us9_NUM
+  00000069            00081                         us10_NUM
+  0000006A            00082                         us11_NUM
+  0000006B            00083                         us12_NUM
+  0000006C            00084                         us13_NUM
+  0000006D            00085                         us14_NUM
+  0000006E            00086                         us15_NUM
+  0000006F            00087                         us16_NUM
+  00000070            00088                         us17_NUM
+  00000071            00089                         us18_NUM
+  00000072            00090                         us19_NUM
+  00000073            00091                         us20_NUM
+  00000074            00092                         us21_NUM
+  00000075            00093                         us22_NUM
+  00000076            00094                         us23_NUM
+  00000077            00095                         us24_NUM
+  00000078            00096                         temp_high1
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000079            00097                         temp_low1 
+  0000007A            00098                         temp_high2 
+  0000007B            00099                         temp_low2 
+  0000007C            00100                         i          
+  0000007D            00101                         j
+  0000007E            00102                         outN 
+  0000007F            00103                         inN 
+                      00104 
+                      00105                 ENDC
+                      00106                 ; Define constants
+                      00107                 #define ECHO_PIN     PORTB, 1   ; Echo pin on PORTB.1
+                      00108                 
+                      00109                 
+                      00110                 ; the instruction shoude start from here
+                      00111                 ORG 0x00
+0000   2???           00112                 GOTO init
+                      00113                 
+                      00114                 ORG 0x04 ; for intarpt
+0004   2???           00115                 GOTO ISR
+                      00116                 
+                      00117                 
+                      00118                 ;when intrupt happend the program will enter here
+0005                  00119 ISR
+                      00120             
+0005   1C0C           00121                 BTFSS   PIR1, TMR1IF   ; Check if Timer1 overflowed
+0006   0009           00122                 RETFIE                  ; If not, return from ISR
+0007   080F           00123                 MOVF    TMR1H, W       ; Move Timer1 high byte to W
+0008   00A0           00124                 MOVWF   pulseWidthH    ; Store high byte
+0009   080E           00125                 MOVF    TMR1L, W       ; Move Timer1 low byte to W
+000A   00A1           00126                 MOVWF   pulseWidthL    ; Store low byte
+000B   1010           00127                 BCF     T1CON, TMR1ON  ; Stop Timer1
+000C   100C           00128                 BCF     PIR1, TMR1IF   ; Clear Timer1 interrupt flag
+                      00129                 
+000D   1283 1303      00130                 BANKSEL PORTD
+000F   0009           00131                 retfie
+                      00132 
+                      00133                 INCLUDE "LCDIS_PORTD.INC"
+                      00001 ;--------------------------------------------------------------
+                      00002 ;       LCDIS.INC               MPB     19-12-05
+                      00003 ;
+                      00004 ;       Include file to operate 16x2 LCD display
+                      00005 ;       Uses GPR 70 - 75
+                      00006 ;       
+                      00007 ;       Final version
+                      00008 ;--------------------------------------------------------------
+                      00009 
+  00000070            00010 Timer1  EQU     70              ; 1ms count register
+  00000071            00011 TimerX  EQU     71              ; Xms count register
+  00000072            00012 Var     EQU     72              ; Output variable
+  00000073            00013 Point   EQU     73              ; Program table pointer
+  00000074            00014 Select  EQU     74              ; Used to set or clear RS bit
+  00000075            00015 OutCod  EQU     75              ; Temp store for output code
+                      00016 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000001            00017 RS      EQU     1               ; Register select output bit
+  00000002            00018 E       EQU     2               ; Enable display input
+                      00019 
+                      00020 
+                      00021 ;--------------------------------------------------------------
+                      00022 ;       1ms delay with 1us cycle time (1000 cycles)
+                      00023 ;--------------------------------------------------------------
+0010   30F9           00024 onems   MOVLW   D'249'          ; Count for 1ms delay 
+0011   00F0           00025         MOVWF   Timer1          ; Load count
+0012   0000           00026 loop1   NOP                     ; Pad for 4 cycle loop
+Message[305]: Using default destination of 1 (file).
+0013   0BF0           00027         DECFSZ  Timer1          ; Count
+0014   2???           00028         GOTO    loop1           ; until Z
+0015   0008           00029         RETURN                  ; and finish
+                      00030 
+                      00031 ;--------------------------------------------------------------
+                      00032 ;       Delay Xms
+                      00033 ;       Receives count in W, uses Onems
+                      00034 ;--------------------------------------------------------------
+0016   00F1           00035 xms     MOVWF   TimerX          ; Count for X ms
+0017   2???           00036 loopX   CALL    onems           ; Delay 1ms
+Message[305]: Using default destination of 1 (file).
+0018   0BF1           00037         DECFSZ  TimerX          ; Repeat X times 
+0019   2???           00038         GOTO    loopX           ; until Z
+001A   0008           00039         RETURN                  ; and finish
+                      00040 
+                      00041 ;--------------------------------------------------------------
+                      00042 ;       Generate data/command clock siganl E
+                      00043 ;--------------------------------------------------------------
+001B   1508           00044 pulseE  BSF     PORTD,E         ; Set E high
+001C   2???           00045         CALL    onems           ; Delay 1ms
+001D   1108           00046         BCF     PORTD,E         ; Reset E low
+001E   2???           00047         CALL    onems           ; Delay 1ms
+001F   0008           00048         RETURN                  ; done
+                      00049 
+                      00050 ;--------------------------------------------------------------
+                      00051 ;       Send a command byte in two nibbles from RB4 - RB7
+                      00052 ;       Receives command in W, uses PulseE and Onems
+                      00053 ;--------------------------------------------------------------
+0020   00F5           00054 send    MOVWF   OutCod          ; Store output code
+0021   39F0           00055         ANDLW   0F0             ; Clear low nybble
+0022   0088           00056         MOVWF   PORTD           ; Output high nybble
+0023   18F4           00057         BTFSC   Select,RS       ; Test RS bit
+0024   1488           00058         BSF     PORTD,RS        ; and set for data
+0025   2???           00059         CALL    pulseE          ; and clock display register
+0026   2???           00060         CALL    onems           ; wait 1ms for display
+                      00061 
+Message[305]: Using default destination of 1 (file).
+0027   0EF5           00062         SWAPF   OutCod          ; Swap low and high nybbles 
+0028   0875           00063         MOVF    OutCod,W        ; Retrieve output code
+0029   39F0           00064         ANDLW   0F0             ; Clear low nybble
+002A   0088           00065         MOVWF   PORTD           ; Output low nybble
+002B   18F4           00066         BTFSC   Select,RS       ; Test RS bit
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+002C   1488           00067         BSF     PORTD,RS        ; and set for data
+002D   2???           00068         CALL    pulseE          ; and clock display register
+002E   2???           00069         CALL    onems           ; wait 1ms for display
+002F   0008           00070         RETURN                  ; done
+                      00071 
+                      00072 ;--------------------------------------------------------------
+                      00073 ;       Initialise the display
+                      00074 ;       Uses Send
+                      00075 ;--------------------------------------------------------------
+0030   3064           00076 inid    MOVLW   D'100'          ; Load count for 100ms delay
+0031   2???           00077         CALL    xms             ; and wait for display start
+0032   30F0           00078         MOVLW   0F0             ; Mask for select code
+0033   00F4           00079         MOVWF   Select          ; High nybble not masked
+                      00080 
+0034   3030           00081         MOVLW   0x30            ; Load initial nibble
+0035   0088           00082         MOVWF   PORTD           ; and output it to display
+0036   2???           00083         CALL    pulseE          ; Latch initial code
+0037   3005           00084         MOVLW   D'5'            ; Set delay 5ms
+0038   2???           00085         CALL    xms             ; and wait
+0039   2???           00086         CALL    pulseE          ; Latch initial code again
+003A   2???           00087         CALL    onems           ; Wait 1ms
+003B   2???           00088         CALL    pulseE          ; Latch initial code again
+003C   1208           00089         BCF     PORTD,4         ; Set 4-bit mode
+003D   2???           00090         CALL    pulseE          ; Latch it
+                      00091         
+003E   3028           00092         MOVLW   0x28            ; Set 4-bit mode, 2 lines
+003F   2???           00093         CALL    send            ; and send code
+0040   3008           00094         MOVLW   0x08            ; Switch off display
+0041   2???           00095         CALL    send            ; and send code
+0042   3001           00096         MOVLW   0x01            ; Code to clear display
+0043   2???           00097         CALL    send            ; and send code
+0044   3006           00098         MOVLW   0x06            ; Enable cursor auto inc  
+0045   2???           00099         CALL    send            ; and send code
+0046   3080           00100         MOVLW   0x80            ; Zero display address
+0047   2???           00101         CALL    send            ; and send code
+0048   300C           00102         MOVLW   0x0C            ; Turn on display  
+0049   2???           00103         CALL    send            ; and send code
+                      00104 
+004A   0008           00105         RETURN                  ; Done
+                      00106 
+                      00107 ;--------------------------------------------------------------
+                      00134 ;the init for our programe
+004B                  00135 init
+                      00136         
+004B   1683 1303      00137                 BANKSEL TRISD
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+004D   0188           00138                 CLRF TRISD ; make it outputs
+                      00139 
+004E   1683 1303      00140                 BANKSEL TRISC
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0050   0187           00141                 CLRF TRISC ; make it outputs
+                      00142                 
+                      00143                 ;BANKSEL PORTD
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00144                 ;CLRF PORTD
+                      00145                 
+                      00146                 ;BANKSEL PORTC
+                      00147                 ;CLRF PORTC
+                      00148                 
+                      00149                 
+                      00150                 
+                      00151                 
+0051   1683 1303      00152                 BANKSEL TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0053   1006           00153                 BCF TRISB, RB0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0054   1486           00154                 BSF TRISB, RB1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0055   1106           00155                 BCF TRISB, RB2
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0056   1186           00156                 BCF TRISB, RB3
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0057   1206           00157                 BCF TRISB, RB4
+                      00158                 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0058   1286           00159                 BCF TRISB, RB5
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0059   1306           00160                 BCF TRISB, RB6
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+005A   1386           00161                 BCF TRISB, RB7
+                      00162                 
+                      00163         
+                      00164                 ;BANKSEL PORTB
+                      00165                 ;CLRF PORTB
+                      00166                 
+                      00167                 
+005B   1283 1303      00168                 BANKSEL T1CON
+005D   1010           00169                 BCF     T1CON, TMR1ON  ; Ensure Timer1 is off
+                      00170                 
+005E   1283 1303      00171                 BANKSEL PORTD
+0060   1103           00172                 BCF STATUS,Z
+0061   1003           00173                 BCF STATUS,C
+                      00174                 
+0062   01A0           00175                 CLRF    pulseWidthH       ; Variable to store the high byte of pulse width
+0063   01A1           00176                  CLRF   pulseWidthL       ; Variable to store the low byte of pulse width
+0064   01A2           00177                  CLRF   quotient         ; Quotient of division
+0065   01A3           00178                  CLRF   quotientH
+0066   01A4           00179                  CLRF    tempH            ; Temporary high byte
+0067   01A5           00180                  CLRF   tempL            ; Temporary low byte
+0068   01A6           00181                  CLRF   num58
+0069   01A7           00182                  CLRF   CurPosotion 
+006A   01A8           00183                  CLRF   Count
+006B   01A9           00184                  CLRF    huns
+006C   01AA           00185                  CLRF   tens
+006D   01AB           00186                  CLRF   ones
+                      00187                 
+                      00188                 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00189                 
+                      00190         
+006E   2???           00191                 GOTO start
+                      00192 
+                      00193 ;the main code for our programe
+006F                  00194 start
+006F   2???           00195                 CALL xms
+0070   2???           00196                 CALL xms
+0071   2???           00197                 CALL inid
+                      00198         
+0072   2???           00199                 CALL welcomeMessage
+                      00200                 
+0073   2???           00201                 CALL delay500ms
+0074   10F4           00202                 BCF     Select,RS      ; select command register
+0075   3008           00203                 MOVLW   0x08           ; load command for display control
+0076   2???           00204                 CALL    send
+0077   2???           00205                 CALL    xms
+0078   300C           00206                 MOVLW   0x0C           ; load command to turn on display with no cursor
+0079   2???           00207                 CALL    send
+                      00208 
+007A   2???           00209                 CALL delay500ms
+007B   3008           00210                 MOVLW   0x08
+007C   2???           00211                 CALL    send
+007D   2???           00212                 CALL    xms
+007E   300C           00213                 MOVLW   0x0C
+007F   2???           00214                 CALL    send
+                      00215 
+0080   2???           00216                 CALL delay500ms
+0081   3001           00217                 MOVLW d'1'
+0082   00E0           00218                 MOVWF us1_NUM   
+                      00219                 
+0083   3002           00220                 MOVLW d'2'
+0084   00E1           00221                 MOVWF us2_NUM
+                      00222                 
+0085   3003           00223                 MOVLW d'3'
+0086   00E2           00224                 MOVWF us3_NUM
+                      00225                 
+0087   3004           00226                 MOVLW d'4'
+0088   00E3           00227                 MOVWF us4_NUM
+                      00228                 
+0089   3005           00229                 MOVLW d'5'
+008A   00E4           00230                 MOVWF us5_NUM
+                      00231                 
+008B   3006           00232                 MOVLW d'6'
+008C   00E5           00233                 MOVWF us6_NUM
+                      00234                 
+008D   3007           00235                 MOVLW d'7'
+008E   00E6           00236                 MOVWF us7_NUM
+                      00237                 
+008F   3008           00238                 MOVLW d'8'
+0090   00E7           00239                 MOVWF us8_NUM
+                      00240                 
+0091   3009           00241                 MOVLW d'9'
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0092   00E8           00242                 MOVWF us9_NUM
+                      00243                 
+0093   300A           00244                 MOVLW d'10'
+0094   00E9           00245                 MOVWF us10_NUM
+                      00246                 
+0095   300B           00247                 MOVLW d'11'
+0096   00EA           00248                 MOVWF us11_NUM
+                      00249                 
+0097   300C           00250                 MOVLW d'12'
+0098   00EB           00251                 MOVWF us12_NUM
+                      00252                 
+0099   300D           00253                 MOVLW d'13'
+009A   00EC           00254                 MOVWF us13_NUM
+                      00255                 
+009B   300E           00256                 MOVLW d'14'
+009C   00ED           00257                 MOVWF us14_NUM
+                      00258                 
+009D   300F           00259                 MOVLW d'15'
+009E   00EE           00260                 MOVWF us15_NUM
+                      00261                 
+009F   3010           00262                 MOVLW d'16'
+00A0   00EF           00263                 MOVWF us16_NUM
+                      00264                 
+00A1   3011           00265                 MOVLW d'17'
+00A2   00F0           00266                 MOVWF us17_NUM
+                      00267                 
+00A3   3012           00268                 MOVLW d'18'
+00A4   00F1           00269                 MOVWF us18_NUM
+                      00270                 
+00A5   3013           00271                 MOVLW d'19'
+00A6   00F2           00272                 MOVWF us19_NUM
+                      00273                 
+00A7   3014           00274                 MOVLW d'20'
+00A8   00F3           00275                 MOVWF us20_NUM
+                      00276                 
+00A9   3015           00277                 MOVLW d'21'
+00AA   00F4           00278                 MOVWF us21_NUM
+                      00279                 
+00AB   3016           00280                 MOVLW d'22'
+00AC   00F5           00281                 MOVWF us22_NUM
+                      00282                 
+00AD   3017           00283                 MOVLW d'23'
+00AE   00F6           00284                 MOVWF us23_NUM
+                      00285                 
+00AF   3018           00286                 MOVLW d'24'
+00B0   00F7           00287                 MOVWF us24_NUM
+                      00288                 
+                      00289                 
+                      00290                 
+00B1   303A           00291                 MOVLW 0x3A
+00B2   00A6           00292                 MOVWF num58
+                      00293         
+                      00294                 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00295                 
+00B3   3064           00296         MOVLW 0x64
+00B4   00B0           00297     MOVWF us1_L
+00B5   3000           00298     MOVLW 0x00
+00B6   00B1           00299     MOVWF us1_H
+                      00300 
+00B7   3034           00301     MOVLW 0x34
+00B8   00B2           00302     MOVWF us2_L
+00B9   3000           00303     MOVLW 0x00
+00BA   00B3           00304     MOVWF us2_H
+                      00305 
+00BB   3036           00306     MOVLW 0x36
+00BC   00B4           00307     MOVWF us3_L
+00BD   3000           00308     MOVLW 0x00
+00BE   00B5           00309     MOVWF us3_H
+                      00310 
+00BF   3038           00311     MOVLW 0x38
+00C0   00B6           00312     MOVWF us4_L
+00C1   3000           00313     MOVLW 0x00
+00C2   00B7           00314     MOVWF us4_H
+                      00315 
+00C3   303A           00316     MOVLW 0x3A
+00C4   00B8           00317     MOVWF us5_L
+00C5   3000           00318     MOVLW 0x00
+00C6   00B9           00319     MOVWF us5_H
+                      00320 
+00C7   303C           00321     MOVLW 0x3C
+00C8   00BA           00322     MOVWF us6_L
+00C9   3000           00323     MOVLW 0x00
+00CA   00BB           00324     MOVWF us6_H
+                      00325 
+00CB   303E           00326     MOVLW 0x3E
+00CC   00BC           00327     MOVWF us7_L
+00CD   3000           00328     MOVLW 0x00
+00CE   00BD           00329     MOVWF us7_H
+                      00330 
+00CF   3040           00331     MOVLW 0x40
+00D0   00BE           00332     MOVWF us8_L
+00D1   3000           00333     MOVLW 0x00
+00D2   00BF           00334     MOVWF us8_H
+                      00335 
+00D3   3042           00336     MOVLW 0x42
+00D4   00C0           00337     MOVWF us9_L
+00D5   3000           00338     MOVLW 0x00
+00D6   00C1           00339     MOVWF us9_H
+                      00340 
+00D7   3044           00341     MOVLW 0x44
+00D8   00C2           00342     MOVWF us10_L
+00D9   3000           00343     MOVLW 0x00
+00DA   00C3           00344     MOVWF us10_H
+                      00345 
+00DB   3046           00346     MOVLW 0x46
+00DC   00C4           00347     MOVWF us11_L
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00DD   3000           00348     MOVLW 0x00
+00DE   00C5           00349     MOVWF us11_H
+                      00350 
+00DF   3048           00351     MOVLW 0x48
+00E0   00C6           00352     MOVWF us12_L
+00E1   3000           00353     MOVLW 0x00
+00E2   00C7           00354     MOVWF us12_H
+                      00355 
+00E3   304A           00356     MOVLW 0x4A
+00E4   00C8           00357     MOVWF us13_L
+00E5   3000           00358     MOVLW 0x00
+00E6   00C9           00359     MOVWF us13_H
+                      00360 
+00E7   304C           00361     MOVLW 0x4C
+00E8   00CA           00362     MOVWF us14_L
+00E9   3000           00363     MOVLW 0x00
+00EA   00CB           00364     MOVWF us14_H
+                      00365 
+00EB   304E           00366     MOVLW 0x4E
+00EC   00CC           00367     MOVWF us15_L
+00ED   3000           00368     MOVLW 0x00
+00EE   00CD           00369     MOVWF us15_H
+                      00370 
+00EF   3050           00371     MOVLW 0x50
+00F0   00CE           00372     MOVWF us16_L
+00F1   3000           00373     MOVLW 0x00
+00F2   00CF           00374     MOVWF us16_H
+                      00375 
+00F3   3052           00376     MOVLW 0x52
+00F4   00D0           00377     MOVWF us17_L
+00F5   3000           00378     MOVLW 0x00
+00F6   00D1           00379     MOVWF us17_H
+                      00380 
+00F7   3054           00381     MOVLW 0x54
+00F8   00D2           00382     MOVWF us18_L
+00F9   3000           00383     MOVLW 0x00
+00FA   00D3           00384     MOVWF us18_H
+                      00385 
+00FB   3056           00386     MOVLW 0x56
+00FC   00D4           00387     MOVWF us19_L
+00FD   3000           00388     MOVLW 0x00
+00FE   00D5           00389     MOVWF us19_H
+                      00390 
+00FF   3058           00391     MOVLW 0x58
+0100   00D6           00392     MOVWF us20_L
+0101   3000           00393     MOVLW 0x00
+0102   00D7           00394     MOVWF us20_H
+                      00395 
+0103   305A           00396     MOVLW 0x5A
+0104   00D8           00397     MOVWF us21_L
+0105   3000           00398     MOVLW 0x00
+0106   00D9           00399     MOVWF us21_H
+                      00400 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0107   305C           00401     MOVLW 0x5C
+0108   00DA           00402     MOVWF us22_L
+0109   3000           00403     MOVLW 0x00
+010A   00DB           00404     MOVWF us22_H
+                      00405 
+010B   305E           00406     MOVLW 0x5E
+010C   00DC           00407     MOVWF us23_L
+010D   3000           00408     MOVLW 0x00
+010E   00DD           00409     MOVWF us23_H
+                      00410 
+010F   3060           00411     MOVLW 0x60
+0110   00DE           00412     MOVWF us24_L
+0111   3000           00413     MOVLW 0x00
+0112   00DF           00414     MOVWF us24_H
+                      00415                         
+                      00416                         
+                      00417                 
+                      00418                         ;CALL meatureDistanses
+0113   2???           00419         CALL sortDistanses
+                      00420                 
+                      00421                 
+0114   0877           00422                 MOVFW us24_NUM
+0115   00E0           00423                 MOVWF us1_NUM
+0116   0876           00424                 MOVFW us23_NUM
+0117   00E1           00425                 MOVWF us2_NUM
+0118   0875           00426                 MOVFW us22_NUM
+0119   00E2           00427                 MOVWF us3_NUM
+011A   0874           00428                 MOVFW us21_NUM
+011B   00E3           00429                 MOVWF us4_NUM
+                      00430                 ;;CALL delay1000ms
+011C   2???           00431                 CALL displayFirst4US
+                      00432                 
+011D   2???           00433                 CALL delay1000ms
+011E   2???           00434                 CALL delay1000ms
+                      00435         
+011F                  00436 loop            
+011F   2???           00437                 GOTO loop
+                      00438                 
+                      00439                 
+0120                  00440 meatureDistanses:
+                      00441 
+0120   2???           00442                 CALL selectROW1
+0121   2???           00443                 CALL selectColumn1InRow1
+0122   2???           00444                 CALL TriggerSensor
+0123   2???           00445                 CALL MeasureDistance
+0124   0822           00446                 MOVF quotient,W
+0125   00B0           00447                 MOVWF us1_L
+0126   0823           00448                 MOVF quotientH,W
+0127   00B1           00449                 MOVWF us1_H
+0128   2???           00450                 CALL condec
+0129   2???           00451                 CALL clearDisplay
+012A   2???           00452                 CALL putLCD
+012B   2???           00453                 CALL delay1000ms
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00454                 
+012C   2???           00455                 CALL selectROW1
+012D   2???           00456                 CALL selectColumn2InRow1
+012E   2???           00457                 CALL TriggerSensor
+012F   2???           00458                 CALL MeasureDistance
+0130   0822           00459                 MOVF quotient,W
+0131   00B2           00460                 MOVWF us2_L
+0132   0823           00461                 MOVF quotientH,W
+0133   00B3           00462                 MOVWF us2_H
+0134   2???           00463                 CALL condec
+0135   2???           00464                 CALL clearDisplay
+0136   2???           00465                 CALL putLCD
+0137   2???           00466                 CALL delay1000ms
+                      00467                 
+0138   2???           00468                 CALL selectROW1
+0139   2???           00469                 CALL selectColumn3InRow1
+013A   2???           00470                 CALL TriggerSensor
+013B   2???           00471                 CALL MeasureDistance
+013C   0822           00472                 MOVF quotient,W
+013D   00B4           00473                 MOVWF us3_L
+013E   0823           00474                 MOVF quotientH,W
+013F   00B5           00475                 MOVWF us3_H
+0140   2???           00476                 CALL condec
+0141   2???           00477                 CALL clearDisplay
+0142   2???           00478                 CALL putLCD
+0143   2???           00479                 CALL delay1000ms
+                      00480                 
+0144   2???           00481                 CALL selectROW1
+0145   2???           00482                 CALL selectColumn4InRow1
+0146   2???           00483                 CALL TriggerSensor
+0147   2???           00484                 CALL MeasureDistance
+0148   0822           00485                 MOVF quotient,W
+0149   00B6           00486                 MOVWF us4_L
+014A   0823           00487                 MOVF quotientH,W
+014B   00B7           00488                 MOVWF us4_H
+014C   2???           00489                 CALL condec
+014D   2???           00490                 CALL clearDisplay
+014E   2???           00491                 CALL putLCD
+014F   2???           00492                 CALL delay1000ms
+                      00493                 
+0150   2???           00494                 CALL selectROW1
+0151   2???           00495                 CALL selectColumn5InRow1
+0152   2???           00496                 CALL TriggerSensor
+0153   2???           00497                 CALL MeasureDistance
+0154   0822           00498                 MOVF quotient,W
+0155   00B8           00499                 MOVWF us5_L
+0156   0823           00500                 MOVF quotientH,W
+0157   00B9           00501                 MOVWF us5_H
+0158   2???           00502                 CALL condec
+0159   2???           00503                 CALL clearDisplay
+015A   2???           00504                 CALL putLCD
+015B   2???           00505                 CALL delay1000ms
+                      00506                 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+015C   2???           00507                 CALL selectROW1
+015D   2???           00508                 CALL selectColumn6InRow1
+015E   2???           00509                 CALL TriggerSensor
+015F   2???           00510                 CALL MeasureDistance
+0160   0822           00511                 MOVF quotient,W
+0161   00BA           00512                 MOVWF us6_L
+0162   0823           00513                 MOVF quotientH,W
+0163   00BB           00514                 MOVWF us6_H
+0164   2???           00515                 CALL condec
+0165   2???           00516                 CALL clearDisplay
+0166   2???           00517                 CALL putLCD
+0167   2???           00518                 CALL delay1000ms
+                      00519         
+0168   2???           00520                 CALL selectROW1
+0169   2???           00521                 CALL selectColumn7InRow1
+016A   2???           00522                 CALL TriggerSensor
+016B   2???           00523                 CALL MeasureDistance
+016C   0822           00524                 MOVF quotient,W
+016D   00BC           00525                 MOVWF us7_L
+016E   0823           00526                 MOVF quotientH,W
+016F   00BD           00527                 MOVWF us7_H
+0170   2???           00528                 CALL condec
+0171   2???           00529                 CALL clearDisplay
+0172   2???           00530                 CALL putLCD
+0173   2???           00531                 CALL delay1000ms
+                      00532                 
+0174   2???           00533                 CALL selectROW1
+0175   2???           00534                 CALL selectColumn8InRow1
+0176   2???           00535                 CALL TriggerSensor
+0177   2???           00536                 CALL MeasureDistance
+0178   0822           00537                 MOVF quotient,W
+0179   00BE           00538                 MOVWF us8_L
+017A   0823           00539                 MOVF quotientH,W
+017B   00BF           00540                 MOVWF us8_H
+017C   2???           00541                 CALL condec
+017D   2???           00542                 CALL clearDisplay
+017E   2???           00543                 CALL putLCD
+017F   2???           00544                 CALL delay1000ms
+                      00545                 
+0180   2???           00546                 CALL selectROW2
+0181   2???           00547                 CALL selectColumn1InRow2
+0182   2???           00548                 CALL TriggerSensor
+0183   2???           00549                 CALL MeasureDistance
+0184   0822           00550                 MOVF quotient,W
+0185   00C0           00551                 MOVWF us9_L
+0186   0823           00552                 MOVF quotientH,W
+0187   00C1           00553                 MOVWF us9_H
+0188   2???           00554                 CALL condec
+0189   2???           00555                 CALL clearDisplay
+018A   2???           00556                 CALL putLCD
+018B   2???           00557                 CALL delay1000ms
+                      00558                 
+018C   2???           00559                 CALL selectROW2
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+018D   2???           00560                 CALL selectColumn2InRow2
+018E   2???           00561                 CALL TriggerSensor
+018F   2???           00562                 CALL MeasureDistance
+0190   0822           00563                 MOVF quotient,W
+0191   00C2           00564                 MOVWF us10_L
+0192   0823           00565                 MOVF quotientH,W
+0193   00C3           00566                 MOVWF us10_H
+0194   2???           00567                 CALL condec
+0195   2???           00568                 CALL clearDisplay
+0196   2???           00569                 CALL putLCD
+0197   2???           00570                 CALL delay1000ms
+                      00571                 
+0198   2???           00572                 CALL selectROW2
+0199   2???           00573                 CALL selectColumn3InRow2
+019A   2???           00574                 CALL TriggerSensor
+019B   2???           00575                 CALL MeasureDistance
+019C   0822           00576                 MOVF quotient,W
+019D   00C4           00577                 MOVWF us11_L
+019E   0823           00578                 MOVF quotientH,W
+019F   00C5           00579                 MOVWF us11_H
+01A0   2???           00580                 CALL condec
+01A1   2???           00581                 CALL clearDisplay
+01A2   2???           00582                 CALL putLCD
+01A3   2???           00583                 CALL delay1000ms
+                      00584                 
+01A4   2???           00585                 CALL selectROW2
+01A5   2???           00586                 CALL selectColumn4InRow2
+01A6   2???           00587                 CALL TriggerSensor
+01A7   2???           00588                 CALL MeasureDistance
+01A8   0822           00589                 MOVF quotient,W
+01A9   00C6           00590                 MOVWF us12_L
+01AA   0823           00591                 MOVF quotientH,W
+01AB   00C7           00592                 MOVWF us12_H
+01AC   2???           00593                 CALL condec
+01AD   2???           00594                 CALL clearDisplay
+01AE   2???           00595                 CALL putLCD
+01AF   2???           00596                 CALL delay1000ms
+                      00597                 
+01B0   2???           00598                 CALL selectROW2
+01B1   2???           00599                 CALL selectColumn5InRow2
+01B2   2???           00600                 CALL TriggerSensor
+01B3   2???           00601                 CALL MeasureDistance
+01B4   0822           00602                 MOVF quotient,W
+01B5   00C8           00603                 MOVWF us13_L
+01B6   0823           00604                 MOVF quotientH,W
+01B7   00C9           00605                 MOVWF us13_H
+01B8   2???           00606                 CALL condec
+01B9   2???           00607                 CALL clearDisplay
+01BA   2???           00608                 CALL putLCD
+01BB   2???           00609                 CALL delay1000ms
+                      00610                 
+01BC   2???           00611                 CALL selectROW2
+01BD   2???           00612                 CALL selectColumn6InRow2
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01BE   2???           00613                 CALL TriggerSensor
+01BF   2???           00614                 CALL MeasureDistance
+01C0   0822           00615                 MOVF quotient,W
+01C1   00CA           00616                 MOVWF us14_L
+01C2   0823           00617                 MOVF quotientH,W
+01C3   00CB           00618                 MOVWF us14_H
+01C4   2???           00619                 CALL condec
+01C5   2???           00620                 CALL clearDisplay
+01C6   2???           00621                 CALL putLCD
+01C7   2???           00622                 CALL delay1000ms
+                      00623                 
+01C8   2???           00624                 CALL selectROW2
+01C9   2???           00625                 CALL selectColumn7InRow2
+01CA   2???           00626                 CALL TriggerSensor
+01CB   2???           00627                 CALL MeasureDistance
+01CC   0822           00628                 MOVF quotient,W
+01CD   00CC           00629                 MOVWF us15_L
+01CE   0823           00630                 MOVF quotientH,W
+01CF   00CD           00631                 MOVWF us15_H
+01D0   2???           00632                 CALL condec
+01D1   2???           00633                 CALL clearDisplay
+01D2   2???           00634                 CALL putLCD
+01D3   2???           00635                 CALL delay1000ms
+                      00636                 
+01D4   2???           00637                 CALL selectROW2
+01D5   2???           00638                 CALL selectColumn8InRow2
+01D6   2???           00639                 CALL TriggerSensor
+01D7   2???           00640                 CALL MeasureDistance
+01D8   0822           00641                 MOVF quotient,W
+01D9   00CE           00642                 MOVWF us16_L
+01DA   0823           00643                 MOVF quotientH,W
+01DB   00CF           00644                 MOVWF us16_H
+01DC   2???           00645                 CALL condec
+01DD   2???           00646                 CALL clearDisplay
+01DE   2???           00647                 CALL putLCD
+01DF   2???           00648                 CALL delay1000ms
+                      00649                 
+01E0   2???           00650                 CALL selectROW3
+01E1   2???           00651                 CALL selectColumn1InRow3
+01E2   2???           00652                 CALL TriggerSensor
+01E3   2???           00653                 CALL MeasureDistance
+01E4   0822           00654                 MOVF quotient,W
+01E5   00D0           00655                 MOVWF us17_L
+01E6   0823           00656                 MOVF quotientH,W
+01E7   00D1           00657                 MOVWF us17_H
+01E8   2???           00658                 CALL condec
+01E9   2???           00659                 CALL clearDisplay
+01EA   2???           00660                 CALL putLCD
+01EB   2???           00661                 CALL delay1000ms
+                      00662                 
+01EC   2???           00663                 CALL selectROW3
+01ED   2???           00664                 CALL selectColumn2InRow3
+01EE   2???           00665                 CALL TriggerSensor
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01EF   2???           00666                 CALL MeasureDistance
+01F0   0822           00667                 MOVF quotient,W
+01F1   00D2           00668                 MOVWF us18_L
+01F2   0823           00669                 MOVF quotientH,W
+01F3   00D3           00670                 MOVWF us18_H
+01F4   2???           00671                 CALL condec
+01F5   2???           00672                 CALL clearDisplay
+01F6   2???           00673                 CALL putLCD
+01F7   2???           00674                 CALL delay1000ms
+                      00675                 
+01F8   2???           00676                 CALL selectROW3
+01F9   2???           00677                 CALL selectColumn3InRow3
+01FA   2???           00678                 CALL TriggerSensor
+01FB   2???           00679                 CALL MeasureDistance
+01FC   0822           00680                 MOVF quotient,W
+01FD   00D4           00681                 MOVWF us19_L
+01FE   0823           00682                 MOVF quotientH,W
+01FF   00D5           00683                 MOVWF us19_H
+0200   2???           00684                 CALL condec
+0201   2???           00685                 CALL clearDisplay
+0202   2???           00686                 CALL putLCD
+0203   2???           00687                 CALL delay1000ms
+                      00688                 
+0204   2???           00689                 CALL selectROW3
+0205   2???           00690                 CALL selectColumn4InRow3
+0206   2???           00691                 CALL TriggerSensor
+0207   2???           00692                 CALL MeasureDistance
+0208   0822           00693                 MOVF quotient,W
+0209   00D6           00694                 MOVWF us20_L
+020A   0823           00695                 MOVF quotientH,W
+020B   00D7           00696                 MOVWF us20_H
+020C   2???           00697                 CALL condec
+020D   2???           00698                 CALL clearDisplay
+020E   2???           00699                 CALL putLCD
+020F   2???           00700                 CALL delay1000ms
+                      00701                 
+0210   2???           00702                 CALL selectROW3
+0211   2???           00703                 CALL selectColumn5InRow3
+0212   2???           00704                 CALL TriggerSensor
+0213   2???           00705                 CALL MeasureDistance
+0214   0822           00706                 MOVF quotient,W
+0215   00D8           00707                 MOVWF us21_L
+0216   0823           00708                 MOVF quotientH,W
+0217   00D9           00709                 MOVWF us21_H
+0218   2???           00710                 CALL condec
+0219   2???           00711                 CALL clearDisplay
+021A   2???           00712                 CALL putLCD
+021B   2???           00713                 CALL delay1000ms
+                      00714                 
+021C   2???           00715                 CALL selectROW3
+021D   2???           00716                 CALL selectColumn6InRow3
+021E   2???           00717                 CALL TriggerSensor
+021F   2???           00718                 CALL MeasureDistance
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0220   0822           00719                 MOVF quotient,W
+0221   00DA           00720                 MOVWF us22_L
+0222   0823           00721                 MOVF quotientH,W
+0223   00DB           00722                 MOVWF us22_H
+0224   2???           00723                 CALL condec
+0225   2???           00724                 CALL clearDisplay
+0226   2???           00725                 CALL putLCD
+0227   2???           00726                 CALL delay1000ms
+                      00727                 
+0228   2???           00728                 CALL selectROW3
+0229   2???           00729                 CALL selectColumn7InRow3
+022A   2???           00730                 CALL TriggerSensor
+022B   2???           00731                 CALL MeasureDistance
+022C   0822           00732                 MOVF quotient,W
+022D   00DC           00733                 MOVWF us23_L
+022E   0823           00734                 MOVF quotientH,W
+022F   00DD           00735                 MOVWF us23_H
+0230   2???           00736                 CALL condec
+0231   2???           00737                 CALL clearDisplay
+0232   2???           00738                 CALL putLCD
+0233   2???           00739                 CALL delay1000ms
+                      00740                 
+0234   2???           00741                 CALL selectROW3
+0235   2???           00742                 CALL selectColumn8InRow3
+0236   2???           00743                 CALL TriggerSensor
+0237   2???           00744                 CALL MeasureDistance
+0238   0822           00745                 MOVF quotient,W
+0239   00DE           00746                 MOVWF us24_L
+023A   0823           00747                 MOVF quotientH,W
+023B   00DF           00748                 MOVWF us24_H
+023C   2???           00749                 CALL condec
+023D   2???           00750                 CALL clearDisplay
+023E   2???           00751                 CALL putLCD
+023F   2???           00752                 CALL delay1000ms
+                      00753                 
+0240   2???           00754                 CALL sortDistanses
+0241   0008           00755                 return
+0242                  00756 displayFirst4US:
+                      00757                  
+                      00758                 
+0242   2???           00759            CALL clearDisplay
+0243   3000           00760                 MOVLW 0x00
+0244   00A7           00761                 MOVWF CurPosotion
+0245   2???           00762                 call setCursorPosition
+                      00763                 
+0246   14F4           00764                 BSF Select, RS
+0247   3055           00765                 MOVLW 'U'
+0248   2???           00766                 CALL send
+0249   3060           00767                 MOVLW 0x60
+024A   0084           00768                 MOVWF FSR
+                      00769                 
+024B   0800           00770                 MOVFW INDF
+024C   00A2           00771                 MOVWF quotient
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+024D   2???           00772                 CALL condec2
+024E   2???           00773                 CALL putLCD3
+                      00774                 
+                      00775                 
+                      00776                 
+024F   303A           00777                 MOVLW ':'
+0250   2???           00778                 CALL send
+                      00779                 
+0251   305E           00780                 MOVLW 0x5E
+0252   0084           00781             MOVWF FSR
+0253   0800           00782                 MOVFW INDF
+0254   00A2           00783                 MOVWF quotient
+                      00784                 
+0255   3001           00785                 MOVLW d'1'
+0256   0784           00786                 ADDWF FSR,F
+0257   0800           00787                 MOVFW INDF
+0258   00A3           00788                 MOVWF quotientH
+0259   2???           00789                 CALL condec
+025A   2???           00790                 CALL putLCD2
+                      00791                 
+025B   3020           00792                 MOVLW ' '
+025C   2???           00793                 CALL send
+025D   3020           00794                 MOVLW ' '
+025E   2???           00795                 CALL send
+                      00796                 
+025F   14F4           00797                 BSF Select, RS
+0260   3055           00798                 MOVLW 'U'
+0261   2???           00799                 CALL send
+                      00800                 
+0262   3061           00801                 MOVLW 0x61
+0263   0084           00802                 MOVWF FSR
+0264   0800           00803                 MOVFW INDF
+0265   00A2           00804                 MOVWF quotient
+0266   2???           00805                 CALL condec2
+0267   2???           00806                 CALL putLCD3
+                      00807                 
+                      00808                 
+0268   303A           00809                 MOVLW ':'
+0269   2???           00810                 CALL send
+                      00811 
+026A   305C           00812                 MOVLW 0x5C
+026B   0084           00813             MOVWF FSR
+026C   0800           00814                 MOVFW INDF
+026D   00A2           00815                 MOVWF quotient
+                      00816                 
+026E   3001           00817                 MOVLW d'1'
+026F   0784           00818                 ADDWF FSR,F
+0270   0800           00819                 MOVFW INDF
+0271   00A3           00820                 MOVWF quotientH
+                      00821                 
+0272   2???           00822                 CALL condec
+0273   2???           00823                 CALL putLCD2
+                      00824                 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0274   3040           00825                 MOVLW 0x40
+0275   07A7           00826                 ADDWF CurPosotion,F
+0276   2???           00827                 call setCursorPosition
+                      00828                 
+0277   14F4           00829                 BSF Select, RS
+0278   3055           00830                 MOVLW 'U'
+0279   2???           00831                 CALL send
+                      00832                 
+027A   3062           00833                 MOVLW 0x62
+027B   0084           00834                 MOVWF FSR
+027C   0800           00835                 MOVFW INDF
+027D   00A2           00836                 MOVWF quotient
+027E   2???           00837                 CALL condec2
+027F   2???           00838                 CALL putLCD3
+                      00839                 
+                      00840 
+0280   303A           00841                 MOVLW ':'
+0281   2???           00842                 CALL send
+                      00843 
+0282   305A           00844                 MOVLW 0x5A
+0283   0084           00845             MOVWF FSR
+0284   0800           00846                 MOVFW INDF
+0285   00A2           00847                 MOVWF quotient
+                      00848                 
+0286   3001           00849                 MOVLW d'1'
+0287   0784           00850                 ADDWF FSR,F
+0288   0800           00851                 MOVFW INDF
+0289   00A3           00852                 MOVWF quotientH
+028A   2???           00853                 CALL condec
+028B   2???           00854                 CALL putLCD2
+                      00855                 
+028C   3020           00856                 MOVLW ' '
+028D   2???           00857                 CALL send
+028E   3020           00858                 MOVLW ' '
+028F   2???           00859                 CALL send
+                      00860                 
+0290   14F4           00861                 BSF Select, RS
+0291   3055           00862                 MOVLW 'U'
+0292   2???           00863                 CALL send
+                      00864                 
+0293   3063           00865                 MOVLW 0x63
+0294   0084           00866             MOVWF FSR
+0295   0800           00867                 MOVFW INDF
+0296   00A2           00868                 MOVWF quotient
+0297   2???           00869                 CALL condec2
+0298   2???           00870                 CALL putLCD3
+                      00871                 
+0299   303A           00872                 MOVLW ':'
+029A   2???           00873                 CALL send
+                      00874 
+029B   3058           00875                 MOVLW 0x58
+029C   0084           00876             MOVWF FSR
+029D   0800           00877                 MOVFW INDF
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+029E   00A2           00878                 MOVWF quotient
+                      00879                 
+029F   3001           00880                 MOVLW d'1'
+02A0   0784           00881                 ADDWF FSR,F
+02A1   0800           00882                 MOVFW INDF
+02A2   00A3           00883                 MOVWF quotientH
+                      00884                 
+02A3   2???           00885                 CALL condec
+02A4   2???           00886                 CALL putLCD2
+                      00887                 
+                      00888         
+                      00889                 
+02A5   0008           00890                 RETURN
+02A6                  00891 sortDistanses:
+02A6   3017           00892         MOVLW d'23'
+02A7   00FE           00893         MOVWF outN
+                      00894         ; outN = n - 1 ; n=24           
+02A8   01FC           00895         CLRF i
+                      00896         
+02A9                  00897 OUTER_LOOP:
+02A9   087C           00898     MOVFW i
+02AA   027E           00899         SUBWF  outN,w
+                      00900         ; outN - i
+                      00901  
+02AB   1903           00902     BTFSC STATUS, Z
+02AC   2???           00903     GOTO END_SORT       
+02AD   01FD           00904         CLRF j
+02AE   00FF           00905         MOVWF inN
+02AF                  00906 INNER_LOOP:
+02AF   3030           00907         MOVLW 0x30
+02B0   0084           00908         MOVWF FSR
+02B1   087D           00909     MOVF j, W
+02B2   027F           00910     SUBWF inN,w
+                      00911         ; inN - j
+02B3   1903           00912     BTFSC STATUS, Z
+02B4   2???           00913     GOTO NEXT_OUTER
+                      00914 
+                      00915         ;tempH  
+                      00916         ;tempL
+                      00917     ; Load NUMBERS[j] (16-bit)
+                      00918         ;MOVFW FSR
+02B5   2???           00919         CALL MultIn2by_j
+02B6   082C           00920         MOVFW resOfMul
+02B7   0784           00921         ADDWF FSR,f
+02B8   0800           00922     MOVFW INDF
+02B9   00F9           00923     MOVWF temp_low1
+                      00924 
+02BA   3030           00925         MOVLW d'48'
+02BB   00A8           00926         MOVWF Count
+02BC   087D           00927         MOVFW j
+02BD   02A8           00928         SUBWF Count,F
+02BE   0828           00929         MOVFW Count
+02BF   0784           00930         ADDWF FSR,F
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+02C0   0800           00931         MOVFW INDF
+02C1   00A5           00932         MOVWF tempL
+02C2   0828           00933         MOVFW Count
+02C3   0284           00934         SUBWF FSR,F
+                      00935         
+                      00936 
+02C4   3001           00937         MOVLW d'1'
+02C5   0784           00938         ADDWF FSR,F
+02C6   0800           00939         MOVFW INDF
+02C7   00F8           00940         MOVWF temp_high1
+                      00941         
+                      00942 
+02C8   3030           00943         MOVLW d'48'
+02C9   00A8           00944         MOVWF Count
+02CA   087D           00945         MOVFW j
+02CB   02A8           00946         SUBWF Count,F
+02CC   0828           00947         MOVFW Count
+02CD   0784           00948         ADDWF FSR,F
+02CE   0800           00949         MOVFW INDF
+02CF   00A4           00950         MOVWF tempH
+02D0   0828           00951         MOVFW Count
+02D1   0284           00952         SUBWF FSR,F
+                      00953         
+                      00954     ; Load NUMBERS[j+1] (16-bit)
+02D2   3001           00955         MOVLW d'1'
+02D3   0784           00956         ADDWF FSR,F
+02D4   0800           00957         MOVFW INDF
+02D5   00FB           00958     MOVWF temp_low2
+                      00959         
+                      00960 
+02D6   3001           00961         MOVLW d'1'
+02D7   0784           00962         ADDWF FSR,F
+02D8   0800           00963         MOVFW INDF
+                      00964         ;MOVF us1_H + 2 * j + 3, W
+02D9   00FA           00965         MOVWF temp_high2
+                      00966         
+                      00967 
+                      00968     ; Compare the high bytes first
+02DA   2???           00969         GOTO chickTheEqH  
+02DB   0878           00970         MOVF temp_high1, W
+02DC   027A           00971         SUBWF temp_high2, W
+02DD   1803           00972         BTFSC STATUS, C
+02DE   2???           00973         GOTO NO_SWAP
+02DF                  00974 NEXT
+                      00975     ; Compare the low bytes if high bytes are equal
+02DF   2???           00976         GOTO chickTheEqL
+02E0                  00977 nextChick
+02E0   0879           00978     MOVF temp_low1, W
+02E1   027B           00979     SUBWF temp_low2, W
+02E2   1803           00980     BTFSC STATUS, C
+02E3   2???           00981     GOTO NO_SWAP
+                      00982 
+                      00983     ; Swap NUMBERS[j] and NUMBERS[j+1]
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+02E4                  00984 Swap:    
+02E4   3003           00985         MOVLW d'3'
+02E5   0284           00986         SUBWF FSR,F
+02E6   087B           00987         MOVF temp_low2, W
+02E7   0080           00988         MOVWF INDF
+                      00989         
+                      00990 
+                      00991 
+02E8   3030           00992         MOVLW d'48'
+02E9   00A8           00993         MOVWF Count
+02EA   087D           00994         MOVFW j
+02EB   02A8           00995         SUBWF Count,F
+02EC   0828           00996         MOVFW Count
+02ED   0784           00997         ADDWF FSR,F
+02EE   0824           00998     MOVF tempH, W
+02EF   0080           00999         MOVWF INDF
+02F0   0828           01000         MOVFW Count
+02F1   0284           01001         SUBWF FSR,F
+                      01002    
+02F2   3001           01003         MOVLW d'1'
+02F3   0784           01004         ADDWF FSR,F
+02F4   087A           01005     MOVF temp_high2, W
+02F5   0080           01006         MOVWF INDF
+                      01007         
+                      01008         
+02F6   3030           01009         MOVLW d'48'
+02F7   00A8           01010         MOVWF Count
+02F8   087D           01011         MOVFW j
+02F9   02A8           01012         SUBWF Count,F
+02FA   0828           01013         MOVFW Count
+02FB   0784           01014         ADDWF FSR,F
+02FC   0825           01015     MOVF tempL, W
+02FD   0080           01016         MOVWF INDF
+02FE   0828           01017         MOVFW Count
+02FF   0284           01018         SUBWF FSR,F
+                      01019 
+                      01020 
+0300   3001           01021         MOVLW d'1'
+0301   0784           01022         ADDWF FSR,F
+0302   0879           01023         MOVF temp_low1, W
+0303   0080           01024         MOVWF INDF
+                      01025 
+                      01026     
+0304   3001           01027         MOVLW d'1'
+0305   0784           01028         ADDWF FSR,F
+0306   0878           01029     MOVF temp_high1, W
+0307   0080           01030     MOVWF INDF
+                      01031 
+                      01032 
+0308                  01033 NO_SWAP:
+0308   0AFD           01034     INCF j, F
+0309   2???           01035     GOTO INNER_LOOP
+                      01036 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+030A                  01037 NEXT_OUTER:
+030A   0AFC           01038     INCF i, F
+030B   2???           01039     GOTO OUTER_LOOP
+                      01040 
+030C                  01041 END_SORT:
+030C   0008           01042       RETURN
+030D                  01043 chickTheEqH:
+030D   0878           01044         MOVF temp_high1, W
+030E   027A           01045     SUBWF temp_high2, W
+030F   1903           01046     BTFSC STATUS, Z
+0310   2???           01047     GOTO NEXT
+0311   2???           01048         GOTO andNext
+0312                  01049 andNext:
+0312   1C03           01050         BTFSS STATUS, C
+0313   2???           01051         GOTO Swap
+0314   2???           01052         GOTO NO_SWAP
+                      01053         
+0315                  01054 chickTheEqL:
+0315   0879           01055         MOVF temp_low1, W
+0316   027B           01056     SUBWF temp_low2, W
+0317   1903           01057     BTFSC STATUS, Z
+0318   2???           01058     GOTO NO_SWAP
+0319   2???           01059         GOTO nextChick
+                      01060                                 
+031A                  01061 MultIn2by_j
+031A   01AC           01062         CLRF resOfMul
+031B   08FD           01063         MOVF j,F
+031C   1903           01064         BTFSC STATUS, Z
+031D   0008           01065         RETURN
+031E   3002           01066         MOVLW D'2'
+031F   00A8           01067         MOVWF Count
+0320   3000           01068         MOVLW d'0'
+0321                  01069 mulLoop:
+0321   077D           01070         ADDWF j,W
+0322   0BA8           01071         DECFSZ Count, F
+0323   2???           01072         GOTO mulLoop
+0324   00AC           01073         MOVWF resOfMul
+0325   0008           01074         RETURN
+                      01075         
+0326                  01076 selectROW1:
+0326   1283 1303      01077         BANKSEL PORTB
+0328   1106           01078         BCF PORTB, RB2
+0329   1186           01079         BCF PORTB, RB3
+032A   0008           01080         RETURN
+032B                  01081 selectROW2:
+032B   1283 1303      01082         BANKSEL PORTB
+032D   1106           01083         BCF PORTB, RB2
+032E   1586           01084         BSF PORTB, RB3
+032F   0008           01085         RETURN
+0330                  01086 selectROW3:
+0330   1283 1303      01087         BANKSEL PORTB
+0332   1506           01088         BSF PORTB, RB2
+0333   1186           01089         BCF PORTB, RB3
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0334   0008           01090         RETURN
+                      01091         
+                      01092         
+0335                  01093 selectColumn1InRow1:
+0335   1283 1303      01094         BANKSEL PORTC
+0337   1107           01095         BCF PORTC, RC2
+0338   1087           01096         BCF PORTC, RC1
+0339   1007           01097         BCF PORTC, RC0
+033A   0008           01098         RETURN
+033B                  01099 selectColumn2InRow1:
+033B   1283 1303      01100         BANKSEL PORTC
+033D   1107           01101         BCF PORTC, RC2
+033E   1087           01102         BCF PORTC, RC1
+033F   1407           01103         BSF PORTC, RC0
+0340   0008           01104         RETURN
+0341                  01105 selectColumn3InRow1:
+0341   1283 1303      01106         BANKSEL PORTC
+0343   1107           01107         BCF PORTC, RC2
+0344   1487           01108         BSF PORTC, RC1
+0345   1007           01109         BCF PORTC, RC0
+0346   0008           01110         RETURN  
+0347                  01111 selectColumn4InRow1:
+0347   1283 1303      01112         BANKSEL PORTC
+0349   1107           01113         BCF PORTC, RC2
+034A   1487           01114         BSF PORTC, RC1
+034B   1407           01115         BSF PORTC, RC0
+034C   0008           01116         RETURN
+034D                  01117 selectColumn5InRow1:
+034D   1283 1303      01118         BANKSEL PORTC
+034F   1507           01119         BSF PORTC, RC2
+0350   1087           01120         BCF PORTC, RC1
+0351   1007           01121         BCF PORTC, RC0
+0352   0008           01122         RETURN
+                      01123 
+0353                  01124 selectColumn6InRow1:
+0353   1283 1303      01125         BANKSEL PORTC
+0355   1507           01126         BSF PORTC, RC2
+0356   1087           01127         BCF PORTC, RC1
+0357   1407           01128         BSF PORTC, RC0
+0358   0008           01129         RETURN
+0359                  01130 selectColumn7InRow1:
+0359   1283 1303      01131         BANKSEL PORTC
+035B   1507           01132         BSF PORTC, RC2
+035C   1487           01133         BSF PORTC, RC1
+035D   1007           01134         BCF PORTC, RC0
+035E   0008           01135         RETURN
+035F                  01136 selectColumn8InRow1:
+035F   1283 1303      01137         BANKSEL PORTC
+0361   1507           01138         BSF PORTC, RC2
+0362   1487           01139         BSF PORTC, RC1
+0363   1407           01140         BSF PORTC, RC0
+0364   0008           01141         RETURN
+                      01142 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01143 
+0365                  01144 selectColumn1InRow2:
+0365   1283 1303      01145         BANKSEL PORTC
+0367   1287           01146         BCF PORTC, RC5
+0368   1207           01147         BCF PORTC, RC4
+0369   1187           01148         BCF PORTC, RC3
+036A   0008           01149         RETURN
+036B                  01150 selectColumn2InRow2:
+036B   1283 1303      01151         BANKSEL PORTC
+036D   1287           01152         BCF PORTC, RC5
+036E   1207           01153         BCF PORTC, RC4
+036F   1587           01154         BSF PORTC, RC3
+0370   0008           01155         RETURN
+0371                  01156 selectColumn3InRow2:
+0371   1283 1303      01157         BANKSEL PORTC
+0373   1287           01158         BCF PORTC, RC5
+0374   1607           01159         BSF PORTC, RC4
+0375   1187           01160         BCF PORTC, RC3
+0376   0008           01161         RETURN
+0377                  01162 selectColumn4InRow2:
+0377   1283 1303      01163         BANKSEL PORTC
+0379   1287           01164         BCF PORTC, RC5
+037A   1607           01165         BSF PORTC, RC4
+037B   1587           01166         BSF PORTC, RC3
+037C   0008           01167         RETURN
+037D                  01168 selectColumn5InRow2:
+037D   1283 1303      01169         BANKSEL PORTC
+037F   1687           01170         BSF PORTC, RC5
+0380   1207           01171         BCF PORTC, RC4
+0381   1187           01172         BCF PORTC, RC3
+0382   0008           01173         RETURN
+0383                  01174 selectColumn6InRow2:
+0383   1283 1303      01175         BANKSEL PORTC
+0385   1687           01176         BSF PORTC, RC5
+0386   1207           01177         BCF PORTC, RC4
+0387   1587           01178         BSF PORTC, RC3
+0388   0008           01179         RETURN  
+0389                  01180 selectColumn7InRow2:
+0389   1283 1303      01181         BANKSEL PORTC
+038B   1687           01182         BSF PORTC, RC5
+038C   1607           01183         BSF PORTC, RC4
+038D   1187           01184         BCF PORTC, RC3
+038E   0008           01185         RETURN
+038F                  01186 selectColumn8InRow2:
+038F   1283 1303      01187         BANKSEL PORTC
+0391   1687           01188         BSF PORTC, RC5
+0392   1607           01189         BSF PORTC, RC4
+0393   1587           01190         BSF PORTC, RC3
+0394   0008           01191         RETURN
+                      01192         ;;;;;;;;;;;;;;;;
+                      01193         
+0395                  01194 selectColumn1InRow3:
+0395   1283 1303      01195         BANKSEL PORTB
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0397   1206           01196         BCF PORTB, RB4
+0398   1283 1303      01197         BANKSEL PORTC
+039A   1387           01198         BCF PORTC, RC7
+039B   1307           01199         BCF PORTC, RC6
+039C   0008           01200         RETURN
+039D                  01201 selectColumn2InRow3:
+039D   1283 1303      01202         BANKSEL PORTB
+039F   1206           01203         BCF PORTB, RB4
+03A0   1283 1303      01204         BANKSEL PORTC
+03A2   1387           01205         BCF PORTC, RC7
+03A3   1707           01206         BSF PORTC, RC6
+03A4   0008           01207         RETURN
+03A5                  01208 selectColumn3InRow3:
+03A5   1283 1303      01209         BANKSEL PORTB
+03A7   1206           01210         BCF PORTB, RB4
+03A8   1283 1303      01211         BANKSEL PORTC
+03AA   1787           01212         BSF PORTC, RC7
+03AB   1307           01213         BCF PORTC, RC6
+03AC   0008           01214         RETURN
+03AD                  01215 selectColumn4InRow3:
+03AD   1283 1303      01216         BANKSEL PORTB
+03AF   1206           01217         BCF PORTB, RB4
+03B0   1283 1303      01218         BANKSEL PORTC
+03B2   1787           01219         BSF PORTC, RC7
+03B3   1707           01220         BSF PORTC, RC6
+03B4   0008           01221         RETURN
+03B5                  01222 selectColumn5InRow3:
+03B5   1283 1303      01223         BANKSEL PORTB
+03B7   1606           01224         BSF PORTB, RB4
+03B8   1283 1303      01225         BANKSEL PORTC
+03BA   1387           01226         BCF PORTC, RC7
+03BB   1307           01227         BCF PORTC, RC6
+03BC   0008           01228         RETURN
+03BD                  01229 selectColumn6InRow3:
+03BD   1283 1303      01230         BANKSEL PORTB
+03BF   1606           01231         BSF PORTB, RB4
+03C0   1283 1303      01232         BANKSEL PORTC
+03C2   1387           01233         BCF PORTC, RC7
+03C3   1707           01234         BSF PORTC, RC6
+03C4   0008           01235         RETURN
+03C5                  01236 selectColumn7InRow3:
+03C5   1283 1303      01237         BANKSEL PORTB
+03C7   1606           01238         BSF PORTB, RB4
+03C8   1283 1303      01239         BANKSEL PORTC
+03CA   1787           01240         BSF PORTC, RC7
+03CB   1307           01241         BCF PORTC, RC6
+03CC   0008           01242         RETURN
+03CD                  01243 selectColumn8InRow3:
+03CD   1283 1303      01244         BANKSEL PORTB
+03CF   1606           01245         BSF PORTB, RB4
+03D0   1283 1303      01246         BANKSEL PORTC
+03D2   1787           01247         BSF PORTC, RC7
+03D3   1707           01248         BSF PORTC, RC6
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+03D4   0008           01249         RETURN
+                      01250         
+03D5                  01251 chickLargerThan100
+                      01252 
+03D5   3064           01253                 MOVLW   d'100'       ; Load high byte of dividend
+03D6   0222           01254             SUBWF quotient,W
+03D7   00A2           01255                 MOVWF quotient
+03D8   1903           01256                 BTFSC STATUS,Z
+03D9   2???           01257                 CALL chickHunsHighLargerThan1
+03DA   1103           01258                 BCF STATUS,Z
+03DB   0008           01259                 RETURN
+03DC                  01260 chickquotientHLargerThan1
+03DC   08A3           01261                 MOVF quotientH,F
+03DD   1903           01262                 BTFSC STATUS, Z 
+03DE   0008           01263                 RETURN
+03DF   08A2           01264                 MOVF quotient,F
+03E0   1D03           01265                 BTFSS STATUS, Z 
+Message[305]: Using default destination of 1 (file).
+03E1   03A3           01266                 DECF quotientH
+03E2   1403           01267                 BSF STATUS,C
+                      01268                 
+03E3   3064           01269                 MOVLW   d'100'       ; Load high byte of dividend
+03E4   0222           01270             SUBWF   quotient,W
+                      01271                 
+03E5   0008           01272                 RETURN
+                      01273                         
+                      01274 ; Convert input to decimal ................................
+03E6                  01275 condec2  ;MOVWF quotient                ; get ADC result
+03E6   01AA           01276                 CLRF    tens                    ; zero tens digit = 5
+03E7   01AB           01277                 CLRF    ones            ; zero ones digit = 5
+03E8   2???           01278                 GOTO TENS
+                      01279                 
+03E9                  01280 condec  ;MOVWF  quotient                ; get ADC result
+03E9   01A9           01281                 CLRF    huns            ; zero hundreds digit = 2
+03EA   01AA           01282                 CLRF    tens                    ; zero tens digit = 5
+03EB   01AB           01283                 CLRF    ones            ; zero ones digit = 5
+                      01284 
+                      01285 ; Calclulate hundreds......................................
+                      01286 
+03EC   1403           01287 ?               BSF             STATUS,C        ; set carry for subtract
+03ED   3064           01288                 MOVLW   D'100'          ; load 100
+03EE   2???           01289 sub1    CALL    chickLargerThan100
+03EF   1C03           01290                 BTFSS STATUS,C
+03F0   2???           01291                 CALL    chickHunsHighLargerThan1
+03F1   1903 2???      01292                 BZ finishhunds
+                      01293                 ;SUBWF  quotient,1              ; and subtract from result
+Message[305]: Using default destination of 1 (file).
+03F3   0AA9           01294                 INCF    huns            ; count number of loops
+                      01295                 ;BTFSC  STATUS,C        ; and check if done
+03F4   2???           01296                 GOTO    sub1            ; no, carry on
+03F5                  01297 finishhunds
+03F5   3064           01298                 MOVLW   d'100'
+03F6   07A2           01299                 ADDWF   quotient,1              ; yes, add 100 back on
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01300         ;       DECF    huns            ; and correct loop count
+                      01301 
+                      01302 ; Calculate tens digit.....................................
+03F7                  01303 TENS:
+03F7   1403           01304                 BSF             STATUS,C        ; repeat process for tens
+03F8   300A           01305                 MOVLW   D'10'           ; load 10
+Message[305]: Using default destination of 1 (file).
+03F9   02A2           01306 sub2    SUBWF   quotient                ; and subtract from result
+Message[305]: Using default destination of 1 (file).
+03FA   0AAA           01307                 INCF    tens            ; count number of loops
+03FB   1803           01308                 BTFSC   STATUS,C        ; and check if done
+03FC   2???           01309                 GOTO    sub2            ; no, carry on
+                      01310 
+Message[305]: Using default destination of 1 (file).
+03FD   07A2           01311                 ADDWF   quotient                ; yes, add 100 back on
+Message[305]: Using default destination of 1 (file).
+03FE   03AA           01312                 DECF    tens            ; and correct loop count
+03FF   0822           01313                 MOVF    quotient,W              ; load remainder
+0400   00AB           01314                 MOVWF   ones            ; and store as ones digit
+                      01315 
+0401   0008           01316                 RETURN                          ; done
+                      01317 
+0402                  01318 chickHunsHighLargerThan1
+0402   08A3           01319                 MOVF quotientH,F
+0403   1903           01320                 BTFSC STATUS, Z 
+0404   0008           01321                 RETURN
+0405   08A2           01322                 MOVF quotient,F
+0406   1D03           01323                 BTFSS STATUS, Z 
+Message[305]: Using default destination of 1 (file).
+0407   03A3           01324                 DECF quotientH
+0408   1403           01325                 BSF STATUS,C
+                      01326                 
+0409   3064           01327                 MOVLW   d'100'       ; Load high byte of dividend
+040A   0222           01328             SUBWF   quotient,W
+                      01329                 
+040B   0008           01330                 RETURN
+                      01331 
+                      01332 ; Output to display........................................
+040C                  01333 putLCD3
+040C   3030           01334         MOVLW   0x30                    ; load ASCII offset
+040D   07AA           01335         ADDWF   tens,1          ; convert tens to ASCII
+040E   07AB           01336         ADDWF   ones,1          ; convert ones to ASCII
+                      01337 
+040F   082A           01338         MOVF    tens,W          ; load tens code
+0410   2???           01339         CALL    send            ; and output
+0411   082B           01340         MOVF    ones,W          ; load ones code
+0412   2???           01341         CALL    send            ; and output
+                      01342         
+0413   0008           01343         RETURN                          ; done
+                      01344 
+0414                  01345 putLCD2 
+                      01346 ; Convert digits to ASCII and display......................
+                      01347 
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0414   3030           01348         MOVLW   0x30                    ; load ASCII offset
+0415   07A9           01349         ADDWF   huns,1          ; convert hundreds to ASCII
+0416   07AA           01350         ADDWF   tens,1          ; convert tens to ASCII
+0417   07AB           01351         ADDWF   ones,1          ; convert ones to ASCII
+                      01352 
+0418   0829           01353         MOVF    huns,W          ; load hundreds code
+0419   2???           01354         CALL    send            ; and send to display
+041A   082A           01355         MOVF    tens,W          ; load tens code
+041B   2???           01356         CALL    send            ; and output
+041C   082B           01357         MOVF    ones,W          ; load ones code
+041D   2???           01358         CALL    send            ; and output
+                      01359         
+041E   0008           01360         RETURN                          ; done          
+                      01361 
+                      01362         
+041F   10F4           01363 putLCD  BCF             Select,RS       ; set display command mode
+0420   3080           01364                 MOVLW   0x80                    ; code to home cursor
+0421   2???           01365                 CALL    send            ; output it to display
+0422   14F4           01366                 BSF             Select,RS       ; and restore data mode
+                      01367 
+                      01368 ; Convert digits to ASCII and display......................
+                      01369 
+0423   3030           01370         MOVLW   0x30                    ; load ASCII offset
+0424   07A9           01371         ADDWF   huns,1          ; convert hundreds to ASCII
+0425   07AA           01372         ADDWF   tens,1          ; convert tens to ASCII
+0426   07AB           01373         ADDWF   ones,1          ; convert ones to ASCII
+                      01374 
+0427   0829           01375         MOVF    huns,W          ; load hundreds code
+0428   2???           01376         CALL    send            ; and send to display
+0429   082A           01377         MOVF    tens,W          ; load tens code
+042A   2???           01378         CALL    send            ; and output
+042B   082B           01379         MOVF    ones,W          ; load ones code
+042C   2???           01380         CALL    send            ; and output
+042D   3020           01381         MOVLW   ' '                     ; load space code
+042E   2???           01382         CALL    send            ; and output
+042F   3063           01383         MOVLW   'c'                     ; load volts code
+0430   2???           01384         CALL    send            ; and output
+0431   306D           01385         MOVLW   'm'                     ; load volts code
+0432   2???           01386         CALL    send            ; and output
+                      01387         
+                      01388 
+0433   0008           01389         RETURN                          ; done  
+0434                  01390 TRIGGER_PIN_LOW:
+0434   1283 1303      01391       BANKSEL PORTB
+0436   1686           01392       BSF PORTB, RB5
+0437   1306           01393       BCF PORTB, RB6
+0438   1386           01394       BCF PORTB, RB7
+0439   0008           01395       RETURN
+043A                  01396 TRIGGER_PIN_HIGH:
+043A   1283 1303      01397       BANKSEL PORTB
+043C   1286           01398       BCF PORTB, RB5
+043D   1306           01399       BCF PORTB, RB6
+043E   1786           01400       BSF PORTB, RB7
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+043F   0008           01401       RETURN
+                      01402 ; Subroutine to Trigger the Ultrasonic Sensor
+0440                  01403 TriggerSensor:
+0440   2???           01404             CALL TRIGGER_PIN_LOW
+0441   2???           01405             CALL Delay_2us
+0442   2???           01406             CALL TRIGGER_PIN_HIGH              ; Set Trigger pin high
+0443   2???           01407             CALL Delay_10us
+0444   2???           01408             CALL TRIGGER_PIN_LOW               ; Set Trigger pin low
+0445   0008           01409             RETURN              
+                      01410 ; Subroutine to Measure Distance
+0446                  01411 MeasureDistance:
+0446                  01412 WAIT_ECHO
+0446   1C86           01413             BTFSS   ECHO_PIN
+0447   2???           01414             GOTO    WAIT_ECHO
+                      01415         
+                      01416             ; Start Timer1
+0448   018F           01417             CLRF    TMR1H           ; Clear Timer1 high byte
+0449   018E           01418             CLRF    TMR1L           ; Clear Timer1 low byte
+044A   1410           01419             BSF     T1CON, TMR1ON   ; Turn on Timer1
+                      01420 
+                      01421     ; Wait for echo pin to go low
+044B                  01422 WAIT_ECHO_LOW
+044B   1886           01423             BTFSC   ECHO_PIN
+044C   2???           01424             GOTO    WAIT_ECHO_LOW
+                      01425         
+                      01426             ; Stop Timer1
+044D   1010           01427             BCF     T1CON, TMR1ON
+                      01428         
+                      01429             ; Read Timer1 value
+044E   080F           01430             MOVF    TMR1H, W
+044F   00A0           01431             MOVWF   pulseWidthH
+0450   080E           01432             MOVF    TMR1L, W
+0451   00A1           01433             MOVWF   pulseWidthL
+                      01434                 
+                      01435 
+                      01436             ; Combine pulseWidthH and pulseWidthL into a 16-bit value
+0452   0820           01437             MOVF    pulseWidthH, W   ; Load high byte of pulse width
+0453   00A4           01438             MOVWF   tempH            ; Store in tempH
+0454   0821           01439             MOVF    pulseWidthL, W   ; Load low byte of pulse width
+0455   00A5           01440             MOVWF   tempL            ; Store in tempL
+                      01441                 
+0456   1103           01442                 BCF     STATUS,Z
+0457   1003           01443                 BCF     STATUS,C
+0458   01A2           01444                 CLRF quotient
+0459   01A3           01445                 CLRF quotientH
+045A   2???           01446                 CALL    DIV_LOOP         ; Call the division subroutine
+                      01447                 
+                      01448                 
+045B   0008           01449                 RETURN
+                      01450 
+045C                  01451 DIV_LOOP
+045C   2???           01452                 CALL chickLessThan58
+045D   1C03           01453                 BTFSS STATUS,C
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+045E   2???           01454                 CALL chickHighLargerThan1 
+045F   1903 2???      01455                 BZ finish
+0461   0AA2           01456                 INCF quotient,F
+0462   08A2           01457                 MOVF quotient,F
+0463   1903           01458                 BTFSC STATUS,Z
+0464   2???           01459                 CALL chickZero
+0465   2???           01460                 GOTO DIV_LOOP
+                      01461 
+0466                  01462 finish:
+0466   0AA2           01463                 INCF quotient,F
+0467   0008           01464                 RETURN
+                      01465 
+0468                  01466 chickLessThan58
+0468   0826           01467                 MOVFW   num58       ; Load high byte of dividend
+0469   0225           01468             SUBWF   tempL,W
+046A   00A5           01469                 MOVWF tempL
+046B   1903           01470                 BTFSC STATUS,Z
+046C   2???           01471                 CALL chickHighLargerThan1
+046D   1103           01472                 BCF STATUS,Z
+046E   0008           01473                 RETURN
+                      01474 
+046F                  01475 chickHighLargerThan1
+046F   08A4           01476                 MOVF tempH,F
+0470   1903           01477                 BTFSC STATUS, Z 
+0471   0008           01478                 RETURN
+0472   08A5           01479                 MOVF tempL,F
+0473   1D03           01480                 BTFSS STATUS, Z 
+Message[305]: Using default destination of 1 (file).
+0474   03A4           01481                 DECF tempH
+0475   1403           01482                 BSF STATUS,C
+                      01483                 
+0476   0826           01484                 MOVFW   num58       ; Load high byte of dividend
+0477   0225           01485             SUBWF   tempL,W
+                      01486                 
+0478   0008           01487                 RETURN  
+0479                  01488 chickZero
+0479   01A2           01489                 CLRF quotient
+Message[305]: Using default destination of 1 (file).
+047A   0AA3           01490                 INCF quotientH
+047B   0008           01491                 RETURN
+                      01492 ; Delay Subroutines
+047C                  01493 Delay_2us:
+047C   0000           01494             NOP
+047D   0000           01495             NOP
+047E   0008           01496             RETURN
+                      01497 
+                      01498 
+047F                  01499 Delay_10us:
+047F   300A           01500             MOVLW D'10'
+0480   00A8           01501             MOVWF Count
+0481                  01502 DelayLoop:
+0481   0BA8           01503             DECFSZ Count, F
+0482   2???           01504             GOTO DelayLoop
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 32
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0483   0008           01505             RETURN
+                      01506         
+0484                  01507 clearDisplay:
+0484   3001           01508                 MOVLW   0x01            ; Code to clear display
+0485   10F4           01509                 BCF Select, RS
+0486   2???           01510                 CALL    send            ; and send code
+0487   0008           01511                 RETURN
+0488                  01512 delay500ms:
+0488   30FA           01513                 MOVLW   D'250'          ; Set delay 250ms
+0489   2???           01514                 CALL    xms             ; and wait
+048A   30FA           01515                 MOVLW   D'250'          ; Set delay 250ms
+048B   2???           01516                 CALL    xms             ; and wait
+048C   0008           01517                 RETURN
+048D                  01518 delay1000ms:
+048D   2???           01519                 CALL delay500ms
+048E   2???           01520                 CALL delay500ms
+048F   0008           01521                 RETURN
+0490                  01522 welcomeMessage:
+0490   3000           01523                 MOVLW 0x00
+0491   00A7           01524                 MOVWF CurPosotion
+0492   2???           01525                 call setCursorPosition
+                      01526                 
+0493   14F4           01527                 BSF Select, RS
+0494   3057           01528                 MOVLW 'W'
+0495   2???           01529                 CALL send
+0496   3065           01530                 MOVLW 'e'
+0497   2???           01531                 CALL send
+0498   306C           01532                 MOVLW 'l'
+0499   2???           01533                 CALL send
+049A   3063           01534                 MOVLW 'c'
+049B   2???           01535                 CALL send
+049C   306F           01536                 MOVLW 'o'
+049D   2???           01537                 CALL send
+049E   306D           01538                 MOVLW 'm'
+049F   2???           01539                 CALL send
+04A0   3065           01540                 MOVLW 'e'
+04A1   2???           01541                 CALL send
+04A2   3020           01542                 MOVLW ' '
+04A3   2???           01543                 CALL send
+04A4   3074           01544                 MOVLW 't'
+04A5   2???           01545                 CALL send
+04A6   306F           01546                 MOVLW 'o'
+04A7   2???           01547                 CALL send
+                      01548                 
+04A8   3040           01549                 MOVLW 0x40
+04A9   07A7           01550                 ADDWF CurPosotion,F
+04AA   2???           01551                 call setCursorPosition
+                      01552                 
+04AB   14F4           01553                 BSF Select, RS
+04AC   3048           01554                 MOVLW 'H'
+04AD   2???           01555                 CALL send
+04AE   3043           01556                 MOVLW 'C'
+04AF   2???           01557                 CALL send
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+04B0   3053           01558                 MOVLW 'S'
+04B1   2???           01559                 CALL send
+04B2   3052           01560                 MOVLW 'R'
+04B3   2???           01561                 CALL send
+04B4   3030           01562                 MOVLW '0'
+04B5   2???           01563                 CALL send
+04B6   3034           01564                 MOVLW '4'
+04B7   2???           01565                 CALL send
+04B8   3020           01566                 MOVLW ' '
+04B9   2???           01567                 CALL send
+04BA   304D           01568                 MOVLW 'M'
+04BB   2???           01569                 CALL send
+04BC   306F           01570                 MOVLW 'o'
+04BD   2???           01571                 CALL send
+04BE   3064           01572                 MOVLW 'd'
+04BF   2???           01573                 CALL send
+04C0   3075           01574                 MOVLW 'u'
+04C1   2???           01575                 CALL send
+04C2   306C           01576                 MOVLW 'l'
+04C3   2???           01577                 CALL send
+04C4   3065           01578                 MOVLW 'e'
+04C5   2???           01579                 CALL send
+04C6   3073           01580                 MOVLW 's'
+04C7   2???           01581                 CALL send
+                      01582                 
+04C8   0008           01583                 RETURN
+                      01584                 
+                      01585 
+                      01586 
+                      01587 ; Set cursor to a specific DDRAM address
+                      01588 ; Call this with the address in W
+04C9                  01589 setCursorPosition
+04C9   1A27           01590                BTFSC CurPosotion,4
+04CA   2???           01591                 GOTO moveCursorSecondRow
+04CB   3880           01592                 IORLW   0x80        ; Combine with 0x80 to form the correct command
+04CC   10F4           01593                 BCF Select, RS
+04CD   2???           01594                 CALL    send        ; Send command
+04CE   0008           01595                 RETURN
+                      01596 ; Move cursor to the beginning of the second row
+04CF                  01597 moveCursorSecondRow
+04CF   3040           01598                 MOVLW   0x40        ; Address of the beginning of the second row
+04D0   00A7           01599                 MOVWF CurPosotion
+04D1   3880           01600                 IORLW   0x80        ; Combine with 0x80 to form the set DDRAM address command
+04D2   10F4           01601                 BCF Select, RS
+04D3   2???           01602                 CALL    send        ; Send the command to the LCD
+04D4   0008           01603                 RETURN
+                      01604 
+                      01605 
+                      01606 
+Warning[205]: Found directive in column 1. (END)
+3731                  01607 END
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 34
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+?                                 000003EC
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 35
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+Count                             00000028
+CurPosotion                       00000027
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DIV_LOOP                          0000045C
+D_A                               00000005
+D_NOT_A                           00000005
+DelayLoop                         00000481
+Delay_10us                        0000047F
+Delay_2us                         0000047C
+E                                 00000002
+ECHO_PIN                          PORTB, 1
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+END_SORT                          0000030C
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INNER_LOOP                        000002AF
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+ISR                               00000005
+MeasureDistance                   00000446
+MultIn2by_j                       0000031A
+NEXT                              000002DF
+NEXT_OUTER                        0000030A
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+NO_SWAP                           00000308
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+OUTER_LOOP                        000002A9
+OutCod                            00000075
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 37
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+Point                             00000073
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 38
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RE2                               00000002
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RS                                00000001
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+Select                            00000074
+Swap                              000002E4
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TENS                              000003F7
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 39
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRIGGER_PIN_HIGH                  0000043A
+TRIGGER_PIN_LOW                   00000434
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+Timer1                            00000070
+TimerX                            00000071
+TriggerSensor                     00000440
+UA                                00000001
+Var                               00000072
+W                                 00000000
+WAIT_ECHO                         00000446
+WAIT_ECHO_LOW                     0000044B
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 41
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+andNext                           00000312
+chickHighLargerThan1              0000046F
+chickHunsHighLargerThan1          00000402
+chickLargerThan100                000003D5
+chickLessThan58                   00000468
+chickTheEqH                       0000030D
+chickTheEqL                       00000315
+chickZero                         00000479
+chickquotientHLargerThan1         000003DC
+clearDisplay                      00000484
+condec                            000003E9
+condec2                           000003E6
+delay1000ms                       0000048D
+delay500ms                        00000488
+displayFirst4US                   00000242
+finish                            00000466
+finishhunds                       000003F5
+huns                              00000029
+i                                 0000007C
+inN                               0000007F
+inid                              00000030
+init                              0000004B
+j                                 0000007D
+loop                              0000011F
+loop1                             00000012
+loopX                             00000017
+meatureDistanses                  00000120
+moveCursorSecondRow               000004CF
+mulLoop                           00000321
+nextChick                         000002E0
+num58                             00000026
+onems                             00000010
+ones                              0000002B
+outN                              0000007E
+pulseE                            0000001B
+pulseWidthH                       00000020
+pulseWidthL                       00000021
+putLCD                            0000041F
+putLCD2                           00000414
+putLCD3                           0000040C
+quotient                          00000022
+quotientH                         00000023
+resOfMul                          0000002C
+selectColumn1InRow1               00000335
+selectColumn1InRow2               00000365
+selectColumn1InRow3               00000395
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 42
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+selectColumn2InRow1               0000033B
+selectColumn2InRow2               0000036B
+selectColumn2InRow3               0000039D
+selectColumn3InRow1               00000341
+selectColumn3InRow2               00000371
+selectColumn3InRow3               000003A5
+selectColumn4InRow1               00000347
+selectColumn4InRow2               00000377
+selectColumn4InRow3               000003AD
+selectColumn5InRow1               0000034D
+selectColumn5InRow2               0000037D
+selectColumn5InRow3               000003B5
+selectColumn6InRow1               00000353
+selectColumn6InRow2               00000383
+selectColumn6InRow3               000003BD
+selectColumn7InRow1               00000359
+selectColumn7InRow2               00000389
+selectColumn7InRow3               000003C5
+selectColumn8InRow1               0000035F
+selectColumn8InRow2               0000038F
+selectColumn8InRow3               000003CD
+selectROW1                        00000326
+selectROW2                        0000032B
+selectROW3                        00000330
+send                              00000020
+setCursorPosition                 000004C9
+sortDistanses                     000002A6
+start                             0000006F
+sub1                              000003EE
+sub2                              000003F9
+tempH                             00000024
+tempL                             00000025
+temp_high1                        00000078
+temp_high2                        0000007A
+temp_low1                         00000079
+temp_low2                         0000007B
+tens                              0000002A
+us10_H                            00000043
+us10_L                            00000042
+us10_NUM                          00000069
+us11_H                            00000045
+us11_L                            00000044
+us11_NUM                          0000006A
+us12_H                            00000047
+us12_L                            00000046
+us12_NUM                          0000006B
+us13_H                            00000049
+us13_L                            00000048
+us13_NUM                          0000006C
+us14_H                            0000004B
+us14_L                            0000004A
+us14_NUM                          0000006D
+us15_H                            0000004D
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 43
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+us15_L                            0000004C
+us15_NUM                          0000006E
+us16_H                            0000004F
+us16_L                            0000004E
+us16_NUM                          0000006F
+us17_H                            00000051
+us17_L                            00000050
+us17_NUM                          00000070
+us18_H                            00000053
+us18_L                            00000052
+us18_NUM                          00000071
+us19_H                            00000055
+us19_L                            00000054
+us19_NUM                          00000072
+us1_H                             00000031
+us1_L                             00000030
+us1_NUM                           00000060
+us20_H                            00000057
+us20_L                            00000056
+us20_NUM                          00000073
+us21_H                            00000059
+us21_L                            00000058
+us21_NUM                          00000074
+us22_H                            0000005B
+us22_L                            0000005A
+us22_NUM                          00000075
+us23_H                            0000005D
+us23_L                            0000005C
+us23_NUM                          00000076
+us24_H                            0000005F
+us24_L                            0000005E
+us24_NUM                          00000077
+us2_H                             00000033
+us2_L                             00000032
+us2_NUM                           00000061
+us3_H                             00000035
+us3_L                             00000034
+us3_NUM                           00000062
+us4_H                             00000037
+us4_L                             00000036
+us4_NUM                           00000063
+us5_H                             00000039
+us5_L                             00000038
+us5_NUM                           00000064
+us6_H                             0000003B
+us6_L                             0000003A
+us6_NUM                           00000065
+us7_H                             0000003D
+us7_L                             0000003C
+us7_NUM                           00000066
+us8_H                             0000003F
+us8_L                             0000003E
+us8_NUM                           00000067
+MPASM  5.51                       PROJECT.ASM   7-9-2024  13:10:11         PAGE 44
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+us9_H                             00000041
+us9_L                             00000040
+us9_NUM                           00000068
+welcomeMessage                    00000490
+xms                               00000016
+
+Errors   :     0
+Warnings :     2 reported,     0 suppressed
+Messages :    22 reported,     0 suppressed
+
+
